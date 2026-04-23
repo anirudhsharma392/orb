@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:orb/orb.dart'; // To access OrbController and utilities
+import 'basic_orb.dart'; // To access OrbController and utilities
 
 /// An authentic replication of the iOS 14+ Siri Orb.
 /// This widget must be placed on a very dark or pitch black background

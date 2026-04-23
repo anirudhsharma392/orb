@@ -2,7 +2,7 @@ import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:orb/orb.dart';
+import 'package:siri_orb/orb.dart';
 
 void main() {
   runApp(const ExampleApp());

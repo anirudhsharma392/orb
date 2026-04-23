@@ -47,7 +47,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  orb: ^0.0.1
+  siri_orb: ^0.0.2
 ```
 
 Then run:
@@ -63,7 +63,7 @@ flutter pub get
 ### 1. Import
 
 ```dart
-import 'package:orb/orb.dart';
+import 'package:siri_orb/siri_orb.dart';
 ```
 
 ### 2. Create a Controller
@@ -184,7 +184,7 @@ Both `Orb` and `SiriORB` are fully driven by the same `OrbController` — swap t
 ```dart
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:orb/orb.dart';
+import 'package:siri_orb/siri_orb.dart';
 
 void main() => runApp(const MyApp());
 
