@@ -1,6 +1,6 @@
 name: siri_orb
 description: "Premium, GPU-accelerated audio-reactive animations for Flutter. Includes a fluid watercolor orb and an ultra-authentic iOS-style glowing sphere."
-version: 0.0.2
+version: 0.0.3
 repository: https://github.com/AnirudhSharma392/orb
 
 environment:

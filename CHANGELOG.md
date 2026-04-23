@@ -1,3 +1,9 @@
+## 0.0.3
+
+* Improved package description for better discoverability on pub.dev.
+* Moved showcase GIF into the Showcase section of the README for a cleaner header.
+* Updated README header copy to be more compelling and concise.
+
 ## 0.0.2
 
 * Renamed package from `orb` to `siri_orb`.

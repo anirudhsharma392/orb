@@ -49,7 +49,7 @@ Add to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  siri_orb: ^0.0.2
+  siri_orb: ^0.0.3
 ```
 
 Then run:
