@@ -17,7 +17,7 @@ class ExampleApp extends StatelessWidget {
       title: 'Orb Simulator',
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: const Color(0xFF0F111A), // Deep dark sleek tone
+        scaffoldBackgroundColor: const Color(0xFF0F111A),
         colorScheme: const ColorScheme.dark(
           primary: Color(0xFF007AFF),
           secondary: Color(0xFFBF5AF2),
@@ -44,18 +44,21 @@ class OrbShowcasePage extends StatefulWidget {
 
 class _OrbShowcasePageState extends State<OrbShowcasePage>
     with SingleTickerProviderStateMixin {
-  late SiriOrbController _orbController;
+  late OrbController _orbController;
   late AnimationController _audioSimulatorController;
   late Animation<double> _audioSimulatorAnimation;
 
   double _radius = 120.0;
   bool _isPlaying = false;
   final Random _random = Random();
+  
+  List<Color> _currentPalette = OrbPalette.siriOriginal;
+  String _currentThemeName = 'Siri';
 
   @override
   void initState() {
     super.initState();
-    _orbController = SiriOrbController(initialAmplitude: 0.0);
+    _orbController = OrbController(initialAmplitude: 0.0);
 
     _audioSimulatorController = AnimationController(
       vsync: this,
@@ -73,7 +76,6 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
   void _generateNextAudioFrame() {
     if (!_isPlaying) return;
 
-    // Choose a random target amplitude, favoring mid-low ranges for realistic speech
     final target = _random.nextDouble() * 0.8;
 
     _audioSimulatorAnimation = Tween<double>(
@@ -102,7 +104,6 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
         _generateNextAudioFrame();
       } else {
         _audioSimulatorController.stop();
-        // Smoothly fade back to 0
         _audioSimulatorAnimation = Tween<double>(
           begin: _orbController.amplitude,
           end: 0.0,
@@ -117,6 +118,24 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
         _audioSimulatorController.forward(from: 0.0);
       }
     });
+  }
+
+  void _handleOrbTap(BuildContext context) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text(
+          'Orb tapped! Interaction acknowledged.',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.white24,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        duration: const Duration(milliseconds: 1500),
+      ),
+    );
   }
 
   @override
@@ -140,7 +159,6 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
       ),
       body: Stack(
         children: [
-          // Subtle background glow
           Positioned.fill(
             child: Container(
               decoration: const BoxDecoration(
@@ -161,37 +179,32 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
               children: [
                 Expanded(
                   child: Center(
-                    child: SiriOrbAnimation(
-                      controller: _orbController,
-                      radius: _radius,
-                      onTap: () {
-                        ScaffoldMessenger.of(context).clearSnackBars();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text(
-                              'Orb tapped! Interaction acknowledged.',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            backgroundColor: Colors.white24,
-                            behavior: SnackBarBehavior.floating,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            duration: const Duration(milliseconds: 1500),
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 500),
+                      child: _currentThemeName == 'Siri' 
+                        ? SiriORB(
+                            key: const ValueKey('siri'),
+                            controller: _orbController,
+                            radius: _radius,
+                            onTap: () => _handleOrbTap(context),
+                          )
+                        : Orb(
+                            key: ValueKey(_currentThemeName),
+                            controller: _orbController,
+                            radius: _radius,
+                            waveColors: _currentPalette,
+                            onTap: () => _handleOrbTap(context),
                           ),
-                        );
-                      },
                     ),
                   ),
                 ),
                 
-                // Glassmorphic Control Panel
                 ClipRRect(
                   child: BackdropFilter(
                     filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
                     child: AnimatedContainer(
                       duration: const Duration(milliseconds: 300),
-                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
                       decoration: BoxDecoration(
                         color: Colors.white.withValues(alpha: 0.05),
                         borderRadius: const BorderRadius.vertical(top: Radius.circular(32.0)),
@@ -206,7 +219,6 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Play / Stop Control Row
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -247,8 +259,8 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: _isPlaying
-                                        ? const Color(0xFFFF3B30).withValues(alpha: 0.2) // Red tint
-                                        : const Color(0xFF007AFF).withValues(alpha: 0.2), // Blue tint
+                                        ? const Color(0xFFFF3B30).withValues(alpha: 0.2)
+                                        : const Color(0xFF007AFF).withValues(alpha: 0.2),
                                     border: Border.all(
                                       color: _isPlaying
                                           ? const Color(0xFFFF3B30)
@@ -274,7 +286,28 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
                               ),
                             ],
                           ),
-                          const SizedBox(height: 32),
+                          const SizedBox(height: 24),
+
+                          // Palette Switcher
+                          const Text(
+                            'Orb Theme',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              _buildThemeButton('Siri', []),
+                              _buildThemeButton('Basic', OrbPalette.siriOriginal),
+                              _buildThemeButton('Inferno', OrbPalette.inferno),
+                            ],
+                          ),
+                          const SizedBox(height: 24),
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -286,11 +319,6 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
-                              if (_isPlaying)
-                                const Text(
-                                  '(Controlled by simulation)',
-                                  style: TextStyle(color: Color(0xFFBF5AF2), fontSize: 12),
-                                ),
                             ],
                           ),
                           AnimatedBuilder(
@@ -301,14 +329,14 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
                                 min: 0.0,
                                 max: 1.0,
                                 onChanged: _isPlaying
-                                    ? null // Disabled if playing
+                                    ? null
                                     : (val) {
                                         _orbController.amplitude = val;
                                       },
                               );
                             },
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 8),
                           Text(
                             'Orb Radius: ${_radius.toStringAsFixed(0)}',
                             style: const TextStyle(
@@ -327,7 +355,7 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
                               });
                             },
                           ),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: 12),
                         ],
                       ),
                     ),
@@ -337,6 +365,42 @@ class _OrbShowcasePageState extends State<OrbShowcasePage>
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildThemeButton(String name, List<Color> palette) {
+    final isSelected = _currentThemeName == name;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _currentThemeName = name;
+            _currentPalette = palette;
+          });
+        },
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? Colors.white.withValues(alpha: 0.15) : Colors.white.withValues(alpha: 0.05),
+            border: Border.all(
+              color: isSelected ? const Color(0xFF007AFF) : Colors.transparent,
+              width: 1,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Center(
+            child: Text(
+              name,
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.white54,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
