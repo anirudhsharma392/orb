@@ -1,11 +1,9 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/AnirudhSharma392/orb/main/assets/animation.gif" width="220" alt="Orb Animation"/>
-
 # ✨ Orb
 
-**A stunning, GPU-accelerated Flutter animation package with two beautiful styles —**  
-**a fluid watercolor orb and an authentic Siri-style glowing sphere.**
+**Elevate your Flutter UI with premium, high-performance Siri like animations.**  
+**Featuring a watercolor-inspired fluid orb and an ultra-authentic iOS-style glowing sphere.**
 
 [![pub version](https://img.shields.io/pub/v/orb.svg?label=pub&color=6C63FF)](https://pub.dev/packages/orb)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
@@ -20,10 +18,14 @@
 
 <div align="center">
 
+<img src="https://raw.githubusercontent.com/AnirudhSharma392/orb/main/assets/animation.gif" width="320" alt="Orb Animation Showcase"/>
+
+<br/>
+
 | Orb (Watercolor) | SiriORB (Authentic) |
 |:-:|:-:|
 | <img src="https://raw.githubusercontent.com/AnirudhSharma392/orb/main/assets/orb.png" width="160" alt="Fluid Orb"/> | <img src="https://raw.githubusercontent.com/AnirudhSharma392/orb/main/assets/siri.png" width="160" alt="Siri Orb"/> |
-| Smooth fluid watercolor gradients | Authentic iOS Siri-style glowing sphere |
+| Smooth fluid watercolor gradients | Authentic iOS-style glowing sphere |
 
 </div>
 
