@@ -1,7 +1,7 @@
 name: orb
-description: "a circular, animated, and multicolored interface element like siri orb."
+description: "A GPU-accelerated Flutter animation package with two styles: a fluid watercolor Orb and an authentic iOS Siri-style glowing sphere, both audio-reactive."
 version: 0.0.1
-homepage:
+repository: https://github.com/AnirudhSharma392/orb
 
 environment:
   sdk: ^3.11.3
